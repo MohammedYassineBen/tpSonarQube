@@ -1,6 +1,7 @@
 package com.hendisantika.usermanagement.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,17 +19,26 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class WebSecurityConfig {
     private final String[] PUBLIC_LINK = new String[]{
             "/include/**", "/css/**", "/icons/**", "/img/**", "/js/**", "/layer/**", "/static/**"
     };
 
+   @Autowired
     private final PasswordEncoder bCryptPasswordEncoder;
 
+   @Autowired
     private final UserDetailsService userDetailsService;
 
-    @Bean
+
+
+   WebSecurityConfig(PasswordEncoder bCryptPasswordEncoder,UserDetailsService userDetailsService) {
+     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+     this.userDetailsService = userDetailsService;
+   }
+
+
+  @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userDetailsService);
